@@ -1,6 +1,7 @@
 /**
  * @type {import('node-pg-migrate').ColumnDefinitions | undefined}
  */
+export const shorthands = undefined;
 
 /**
  * @param pgm {import('node-pg-migrate').MigrationBuilder}
@@ -18,18 +19,18 @@ export const up = (pgm) => {
 			notNull: true,
 		},
 		body: {
-			type: "TEXT[]",
+			type: "TEXT",
 			notNull: true,
 		},
 		tags: {
+			type: "TEXT[]",
+			notNull: true,
+		},
+		created_at: {
 			type: "TEXT",
 			notNull: true,
 		},
-		createAt: {
-			type: "TEXT",
-			notNull: true,
-		},
-		updateAt: {
+		updated_at: {
 			type: "TEXT",
 			notNull: true,
 		},
