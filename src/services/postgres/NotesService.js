@@ -1,6 +1,7 @@
 const { Pool } = require("pg");
 const { nanoid } = require("nanoid");
-const { InvariantError, NotFoundError } = require("../../exceptions/InvariantError");
+const InvariantError = require("../../exceptions/InvariantError");
+const NotFoundError = require("../../exceptions/NotFoundError");
 const { mapDBToModel } = require("../../utils");
 
 class NotesService {
@@ -24,13 +25,13 @@ class NotesService {
 	}
 
 	async getNotes() {
-		const results = await this._pool.query("SELECT * FORM notes");
-		return results.rows.map(mapDBToModel);
+		const result = await this._pool.query("SELECT * FROM notes");
+		return result.rows.map(mapDBToModel);
 	}
 
 	async getNoteById(id) {
 		const query = {
-			text: "SELECT * FORM notes where id = $1",
+			text: "SELECT * FROM notes WHERE id = $1",
 			values: [id],
 		};
 		const results = await this._pool.query(query);
@@ -41,26 +42,26 @@ class NotesService {
 	}
 
 	async editNoteById(id, { title, body, tags }) {
-		const updatedAt = new Date().ISOString();
+		const updatedAt = new Date().toISOString();
 		const query = {
 			text: "UPDATE notes SET title = $1, body = $2, tags = $3, updated_at = $4 WHERE id = $5 RETURNING id",
-			values: [id, title, body, tags, updatedAt, id],
+			values: [title, body, tags, updatedAt, id],
 		};
 
-		const results = await this._pool.query(query);
+		const result = await this._pool.query(query);
 
-		if (!results.rows.length) {
+		if (!result.rows.length) {
 			throw new NotFoundError("Gagal memperbarui catatan, Id tidak ditemukan");
 		}
 	}
 	async deleteNoteById(id) {
 		const query = {
-			text: "DELETE FROM notes WHERE id = $1",
-			values: [id],
+			text: "DELETE FROM notes WHERE id = $1 RETURNING id",
+        values: [id],
 		};
-		const results = await this._pool.query(query);
+		const result = await this._pool.query(query);
 
-		if (!results.rows.length) {
+		if (!result.rows.length) {
 			throw new NotFoundError("Gagal menghapus catatan, Id tidak ditemukan");
 		}
 	}

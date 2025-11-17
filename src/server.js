@@ -1,9 +1,10 @@
+require("dotenv").config();
+
 const Hapi = require("@hapi/hapi");
 const notes = require("./api/notes");
 const NotesService = require("./services/postgres/NotesService");
 const NotesValidator = require("./validator/notes");
 const ClientError = require("./exceptions/ClientError");
-require("dotenv").config();
 
 const init = async () => {
 	const notesService = new NotesService();
@@ -16,7 +17,6 @@ const init = async () => {
 			},
 		},
 	});
-
 	await server.register({
 		plugin: notes,
 		options: {
