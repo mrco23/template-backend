@@ -23,20 +23,22 @@ const init = async () => {
 			},
 		},
 	});
-	await server.register({
-		plugin: notes,
-		options: {
-			service: notesService,
-			validator: NotesValidator,
+	await server.register([
+		{
+			plugin: notes,
+			options: {
+				service: notesService,
+				validator: NotesValidator,
+			},
 		},
-	});
-	await server.register({
-		plugin: users,
-		options: {
-			service: usersService,
-			validator: UsersValidator,
+		{
+			plugin: users,
+			options: {
+				service: usersService,
+				validator: UsersValidator,
+			},
 		},
-	});
+	]);
 	server.ext("onPreResponse", (request, h) => {
 		const { response } = request;
 
